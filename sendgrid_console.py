@@ -41,6 +41,12 @@ def main():
             content = Content('text/plain', handle_user_input(field_prompt('Message')))
             mail = Mail(from_email, subject, to_email, content)
             while True:
+                to_boolean = boolean_question('Do you want to send it to anyone else?')
+                if to_boolean == 'Y':
+                    mail.personalizations[0].add_to(email_creator('Email'))
+                elif to_boolean == 'N':
+                    break
+            while True:
                 cc_boolean = boolean_question('Do you want to CC anyone?')
                 if cc_boolean == 'Y':
                     mail.personalizations[0].add_cc(email_creator('Email'))
