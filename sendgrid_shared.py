@@ -5,12 +5,19 @@ import os
 import urllib
 import base64
 import mimetypes
+import time
+
+DAY_IN_SECONDS = 86400
 
 def validate_email(email):
     return re.match('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$', email.upper()) != None
 
 def validate_file(file_path):
     return os.path.exists(file_path)
+
+def validate_scheduled_date(timestamp):
+    current_time = time.time()
+    return (current_time+60) <= timestamp <= current_time+(DAY_IN_SECONDS*3)
 
 def get_basename(file_path):
     return os.path.basename(file_path)

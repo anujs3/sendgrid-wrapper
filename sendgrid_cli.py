@@ -26,7 +26,12 @@ def main(sender,recipient,subject,message, attachmentlist, schedule):
                     line = line.strip()
                     mail.add_attachment(shared.create_attachment(line))
         if schedule != None:
-            mail.send_at = int(time.mktime(datetime.datetime.strptime(schedule, '%m-%d-%Y %H:%M:%S').timetuple()))
+            timestamp = int(time.mktime(datetime.datetime.strptime(schedule, '%m-%d-%Y %H:%M:%S').timetuple()))
+            if shared.validate_scheduled_date(timestamp):
+                mail.send_at = timestamp
+            else:
+                click.echo('Error: The scheduled date is not valid.')
+                return
         shared.send_mail(mail)
     else:
         click.echo('Error: One or more emails are invalid.')
