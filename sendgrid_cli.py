@@ -14,7 +14,9 @@ default_email = os.environ.get('DEFAULT_EMAIL')
 @click.option('--message', default='This is a test.', help='Body of the Email')
 @click.option('--attachmentlist', help='Text File with File Paths of Attachments')
 @click.option('--schedule', help='Date/Time to Send Email')
-def main(sender,recipient,subject,message, attachmentlist, schedule):
+@click.option('--cc', help='Email Address for Carbon Copy')
+@click.option('--bcc', help='Email Address for Blocked Carbon Copy')
+def main(sender,recipient,subject,message, attachmentlist, schedule, cc, bcc):
     if shared.validate_email(sender) and shared.validate_email(recipient):
         from_email = Email(sender)
         to_email = Email(recipient)
@@ -32,6 +34,10 @@ def main(sender,recipient,subject,message, attachmentlist, schedule):
             else:
                 click.echo('Error: The scheduled date is not valid.')
                 return
+        if cc != None and shared.validate_email(cc):
+            mail.personalizations[0].add_cc(Email(cc))
+        if bcc != None and shared.validate_email(bcc):
+            mail.personalizations[0].add_bcc(Email(bcc))
         shared.send_mail(mail)
     else:
         click.echo('Error: One or more emails are invalid.')
