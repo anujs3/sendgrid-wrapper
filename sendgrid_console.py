@@ -14,8 +14,10 @@ def validate_boolean(user_input):
 def boolean_question(prompt_string):
     return handle_user_input(boolean_formater(prompt_string), validate_boolean).upper()
 
+def email_creator(prompt_string):
+    return Email(handle_user_input(field_prompt(prompt_string), shared.validate_email))
+
 def handle_user_input(prompt_string, match_condition=lambda input: input != ''):
-    user_input = ''
     while True:
         user_input = raw_input(prompt_string).strip()
         if match_condition(user_input):
@@ -29,8 +31,8 @@ def main():
     while True:
         send_boolean = boolean_question('Do you want to send an email?')
         if send_boolean == 'Y':
-            from_email = Email(handle_user_input(field_prompt('Sender'), shared.validate_email))
-            to_email = Email(handle_user_input(field_prompt('Recipient'), shared.validate_email))
+            from_email = email_creator('Sender')
+            to_email = email_creator('Recipient')
             subject = handle_user_input(field_prompt('Subject Line'))
             content = Content('text/plain', handle_user_input(field_prompt('Message')))
             mail = Mail(from_email, subject, to_email, content)
