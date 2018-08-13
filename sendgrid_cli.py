@@ -2,8 +2,6 @@ from sendgrid.helpers.mail import *
 import click
 import sendgrid_shared as shared
 import os
-import time
-import datetime
 
 default_email = os.environ.get('DEFAULT_EMAIL')
 
@@ -39,8 +37,8 @@ def attachment_handler(attachments, mail):
 
 def schedule_handler(schedule, mail):
     if schedule != None:
-        timestamp = int(time.mktime(datetime.datetime.strptime(schedule, '%m-%d-%Y %H:%M:%S').timetuple()))
-        if shared.validate_scheduled_date(timestamp):
+        timestamp = shared.generate_timestamp(schedule)
+        if shared.validate_date(timestamp):
             mail.send_at = timestamp
         else:
             error_handler('The scheduled date is not valid.')

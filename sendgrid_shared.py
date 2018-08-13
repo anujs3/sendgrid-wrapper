@@ -6,6 +6,7 @@ import urllib
 import base64
 import mimetypes
 import time
+import datetime
 
 DAY_IN_SECONDS = 86400
 
@@ -15,7 +16,7 @@ def validate_email(email):
 def validate_file(file_path):
     return os.path.exists(file_path)
 
-def validate_scheduled_date(timestamp):
+def validate_date(timestamp):
     current_time = time.time()
     return (current_time+60) <= timestamp <= current_time+(DAY_IN_SECONDS*3)
 
@@ -41,6 +42,9 @@ def create_attachment(file_path):
     attachment.disposition = 'attachment'
     attachment.content_id = '{} File'.format(get_extension(file_path).upper())
     return attachment
+
+def generate_timestamp(date):
+    return int(time.mktime(datetime.datetime.strptime(date, '%m-%d-%Y %H:%M:%S').timetuple()))
 
 def send_mail(mail):
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
