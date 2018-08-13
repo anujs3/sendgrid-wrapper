@@ -2,6 +2,8 @@ from sendgrid.helpers.mail import *
 import click
 import sendgrid_shared as shared
 import os
+import time
+import datetime
 
 default_email = os.environ.get('DEFAULT_EMAIL')
 
@@ -11,7 +13,8 @@ default_email = os.environ.get('DEFAULT_EMAIL')
 @click.option('--subject', default='Test', help='The Subject Line')
 @click.option('--message', default='This is a test.', help='Body of the Email')
 @click.option('--attachmentlist', help='Text File with File Paths of Attachments')
-def main(sender,recipient,subject,message, attachmentlist):
+@click.option('--schedule', help='Date/Time to Send Email')
+def main(sender,recipient,subject,message, attachmentlist, schedule):
     if shared.validate_email(sender) and shared.validate_email(recipient):
         from_email = Email(sender)
         to_email = Email(recipient)
@@ -22,6 +25,8 @@ def main(sender,recipient,subject,message, attachmentlist):
                 for line in file.readlines():
                     line = line.strip()
                     mail.add_attachment(shared.create_attachment(line))
+        if schedule != None:
+            mail.send_at = int(time.mktime(datetime.datetime.strptime(schedule, '%m-%d-%Y %H:%M:%S').timetuple()))
         shared.send_mail(mail)
     else:
         click.echo('Error: One or more emails are invalid.')
