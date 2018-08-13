@@ -49,7 +49,7 @@ def main():
             schedule_boolean = boolean_question('Do you want to schedule the email?')
             if schedule_boolean == 'Y':
                 while True:
-                    schedule = handle_user_input((field_prompt('Date/Time [MM-DD-YYYY HH:MM:SS]')))
+                    schedule = handle_user_input(field_prompt('Date/Time [MM-DD-YYYY HH:MM:SS]'))
                     timestamp = shared.generate_timestamp(schedule)
                     if shared.validate_date(timestamp):
                         mail.send_at = timestamp
