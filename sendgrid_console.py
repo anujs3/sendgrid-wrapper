@@ -41,6 +41,18 @@ def main():
             content = Content('text/plain', handle_user_input(field_prompt('Message')))
             mail = Mail(from_email, subject, to_email, content)
             while True:
+                cc_boolean = boolean_question('Do you want to CC anyone?')
+                if cc_boolean == 'Y':
+                    mail.personalizations[0].add_cc(email_creator('Email'))
+                elif cc_boolean == 'N':
+                    break
+            while True:
+                bcc_boolean = boolean_question('Do you want to BCC anyone?')
+                if bcc_boolean == 'Y':
+                    mail.personalizations[0].add_bcc(email_creator('Email'))
+                elif bcc_boolean == 'N':
+                    break
+            while True:
                 attachment_boolean = boolean_question('Do you want to add an attachment?')
                 if attachment_boolean == 'Y':
                     mail_attacher(mail)
