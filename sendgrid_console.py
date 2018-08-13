@@ -17,6 +17,10 @@ def boolean_question(prompt_string):
 def email_creator(prompt_string):
     return Email(handle_user_input(field_prompt(prompt_string), shared.validate_email))
 
+def mail_attacher(mail):
+    mail.add_attachment(shared.create_attachment(handle_user_input('Filepath of Attachment: ', shared.validate_file)))
+    print('Attachment was successfully attached to the email.')
+
 def handle_user_input(prompt_string, match_condition=lambda input: input != ''):
     while True:
         user_input = raw_input(prompt_string).strip()
@@ -39,8 +43,7 @@ def main():
             while True:
                 attachment_boolean = boolean_question('Do you want to add an attachment?')
                 if attachment_boolean == 'Y':
-                    mail.add_attachment(shared.create_attachment(handle_user_input('Filepath of Attachment: ', shared.validate_file)))
-                    print('Attachment was successfully attached to the email.')
+                    mail_attacher(mail)
                 elif attachment_boolean == 'N':
                     break
             shared.send_mail(mail)
