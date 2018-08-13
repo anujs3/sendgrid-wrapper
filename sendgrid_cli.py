@@ -32,17 +32,23 @@ def main(sender,recipient,subject,message, attachmentlist, schedule, cc, bcc):
             if shared.validate_scheduled_date(timestamp):
                 mail.send_at = timestamp
             else:
-                error_handler('Error: The scheduled date is not valid.')
-        if cc != None and shared.validate_email(cc):
-            mail.personalizations[0].add_cc(Email(cc))
-        if bcc != None and shared.validate_email(bcc):
-            mail.personalizations[0].add_bcc(Email(bcc))
+                error_handler('The scheduled date is not valid.')
+        if cc != None:
+            if shared.validate_email(cc):
+                mail.personalizations[0].add_cc(Email(cc))
+            else:
+                error_handler('The CC email is invalid.')
+        if bcc != None:
+            if shared.validate_email(bcc):
+                mail.personalizations[0].add_bcc(Email(bcc))
+            else:
+                error_handler('The BCC email is invalid.')
         shared.send_mail(mail)
     else:
-        error_handler('Error: One or more emails are invalid.')
+        error_handler('One or more emails are invalid.')
 
 def error_handler(error_message, exit_code=1):
-    click.echo(error_message)
+    click.echo('Error: ' + error_message)
     exit(exit_code)
 
 if __name__ == '__main__':
