@@ -20,10 +20,10 @@ def main(sender,recipient,subject,message, attachments, schedule, cc, bcc):
         to_email = Email(recipient)
         content = Content('text/plain', message)
         mail = Mail(from_email, subject, to_email, content)
-        attachment_handler(attachments, mail)
-        schedule_handler(schedule, mail)
         cc_handler(cc, mail)
         bcc_handler(bcc, mail)
+        attachment_handler(attachments, mail)
+        schedule_handler(schedule, mail)
         shared.send_mail(mail)
     else:
         error_handler('One or more emails are invalid.')
