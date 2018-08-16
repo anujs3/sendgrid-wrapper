@@ -11,16 +11,18 @@ default_email = os.environ.get('DEFAULT_EMAIL')
 @click.option('--recipient', default=default_email, help='The Email Address for Receiving Mail')
 @click.option('--subject', default='Test', help='The Subject Line')
 @click.option('--message', default='This is a test.', help='Body of the Email')
+@click.option('--receivers', help='Email Addresses of Other Recipients')
 @click.option('--attachments', help='Text File with File Paths of Attachments')
 @click.option('--schedule', help='Date/Time to Send Email')
-@click.option('--cc', help='Email Address(es) for Carbon Copy')
-@click.option('--bcc', help='Email Address(es) for Blocked Carbon Copy')
-def main(sender,recipient,subject,message, attachments, schedule, cc, bcc):
+@click.option('--cc', help='Email Address(es) for Carbon Copies')
+@click.option('--bcc', help='Email Address(es) for Blocked Carbon Copies')
+def main(sender, recipient, subject, message, receivers, attachments, schedule, cc, bcc):
     if shared.validate_email(sender) and shared.validate_email(recipient):
         from_email = Email(sender)
         to_email = Email(recipient)
         message_content = Content('text/plain', message)
         new_mail = Mail(from_email, subject, to_email, message_content)
+        receiver_handler(receivers, new_mail)
         cc_handler(cc, new_mail)
         bcc_handler(bcc, new_mail)
         attachment_handler(attachments, new_mail)
@@ -28,6 +30,36 @@ def main(sender,recipient,subject,message, attachments, schedule, cc, bcc):
         shared.send_mail(new_mail)
     else:
         error_handler('One or more emails are invalid.')
+
+
+def receiver_handler(receivers, new_mail):
+    if receivers is not None:
+        list_of_emails = receivers.split(';')
+        for email_address in list_of_emails:
+            if shared.validate_email(email_address):
+                new_mail.personalizations[0].add_to(Email(email_address))
+            else:
+                error_handler('The recipient email address ({}) is invalid.'.format(email_address))
+
+
+def cc_handler(cc, new_mail):
+    if cc is not None:
+        list_of_emails = cc.split(';')
+        for email_address in list_of_emails:
+            if shared.validate_email(email_address):
+                new_mail.personalizations[0].add_cc(Email(email_address))
+            else:
+                error_handler('The CC email address ({}) is invalid.'.format(email_address))
+
+
+def bcc_handler(bcc, new_mail):
+    if bcc is not None:
+        list_of_emails = bcc.split(';')
+        for email_address in list_of_emails:
+            if shared.validate_email(email_address):
+                new_mail.personalizations[0].add_bcc(Email(email_address))
+            else:
+                error_handler('The BCC email address ({}) is invalid.'.format(email_address))
 
 
 def attachment_handler(attachments, new_mail):
@@ -45,26 +77,6 @@ def schedule_handler(schedule, new_mail):
             new_mail.send_at = timestamp
         else:
             error_handler('The scheduled date is not valid.')
-
-
-def cc_handler(cc, new_mail):
-    if cc is not None:
-        list_of_emails = cc.split(';')
-        for email_address in list_of_emails:
-            if shared.validate_email(email_address):
-                new_mail.personalizations[0].add_cc(Email(email_address))
-            else:
-                error_handler('The CC email ({}) is invalid.'.format(email_address))
-
-
-def bcc_handler(bcc, new_mail):
-    if bcc is not None:
-        list_of_emails = bcc.split(';')
-        for email_address in list_of_emails:
-            if shared.validate_email(email_address):
-                new_mail.personalizations[0].add_bcc(Email(email_address))
-            else:
-                error_handler('The BCC email ({}) is invalid.'.format(email_address))
 
 
 def error_handler(error_message, exit_code=1):
