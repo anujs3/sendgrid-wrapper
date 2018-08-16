@@ -24,7 +24,7 @@ def email_creator(prompt_string):
 
 
 def attachment_uploader(new_mail):
-    new_mail.add_attachment(shared.create_attachment(handle_user_input('Filepath of Attachment: ', shared.validate_file)))
+    new_mail.add_attachment(shared.create_attachment(handle_user_input('File Path of Attachment: ', shared.validate_file)))
     print('Attachment was successfully attached to the email.')
 
 
