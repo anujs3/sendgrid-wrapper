@@ -67,7 +67,8 @@ def attachment_handler(attachments, new_mail):
         with open(attachments) as file:
             for line in file.readlines():
                 line = line.strip()
-                new_mail.add_attachment(shared.create_attachment(line))
+                if shared.validate_file(line):
+                    new_mail.add_attachment(shared.create_attachment(line))
 
 
 def schedule_handler(schedule, new_mail):
