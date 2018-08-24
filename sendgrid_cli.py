@@ -63,7 +63,7 @@ def bcc_handler(bcc, new_mail):
 
 
 def attachment_handler(attachments, new_mail):
-    if attachments is not None:
+    if attachments is not None and shared.validate_file(attachments):
         with open(attachments) as file:
             for line in file.readlines():
                 line = line.strip()
