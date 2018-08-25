@@ -42,6 +42,14 @@ def get_content(file_path):
     return base64.b64encode(data)
 
 
+def message_handler(message):
+    if validate_file(message):
+        with open(message) as file:
+            return file.read()
+    else:
+        return message
+
+
 def create_attachment(file_path):
     new_attachment = Attachment()
     new_attachment.content = get_content(file_path)

@@ -46,7 +46,7 @@ def main():
             from_email = email_creator('Sender')
             to_email = email_creator('Recipient')
             subject = handle_user_input(field_prompt('Subject Line'))
-            message_content = Content('text/plain', handle_user_input(field_prompt('Message')))
+            message_content = Content('text/plain', shared.message_handler(handle_user_input(field_prompt('Message'))))
             new_mail = Mail(from_email, subject, to_email, message_content)
             while True:
                 to_boolean = boolean_question('Do you want to send it to anyone else?')
