@@ -1,5 +1,5 @@
-import sendgrid
-from sendgrid.helpers.mail import *
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Attachment
 import re
 import os
 import urllib
@@ -12,6 +12,7 @@ DAY_IN_SECONDS = 86400
 
 
 def validate_email(email):
+    assert type(email) == str
     return re.match('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$', email.upper()) is not None
 
 
@@ -65,6 +66,6 @@ def generate_timestamp(date):
 
 
 def send_mail(new_mail):
-    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    sg = SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     response = sg.client.mail.send.post(request_body=new_mail.get())
     print('\n{}\n{}\n{}'.format(response.status_code, response.body, response.headers))

@@ -1,25 +1,30 @@
-from sendgrid.helpers.mail import *
+from sendgrid.helpers.mail import Email, Content, Mail
 import re
 import sendgrid_shared as shared
 
 
 def field_prompt(prompt_string):
+    assert type(prompt_string) == str
     return prompt_string + ': '
 
 
 def boolean_formatter(prompt_string):
+    assert type(prompt_string) == str
     return prompt_string + ' [Y|N] '
 
 
 def validate_boolean(user_input):
+    assert type(user_input) == str
     return re.match('^[Y|N]$', user_input.upper()) is not None
 
 
 def boolean_question(prompt_string):
+    assert type(prompt_string) == str
     return handle_user_input(boolean_formatter(prompt_string), validate_boolean).upper()
 
 
 def email_creator(prompt_string):
+    assert type(prompt_string) == str
     return Email(handle_user_input(field_prompt(prompt_string), shared.validate_email))
 
 

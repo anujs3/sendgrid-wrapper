@@ -1,4 +1,4 @@
-from sendgrid.helpers.mail import *
+from sendgrid.helpers.mail import Email, Content, Mail
 import click
 import sendgrid_shared as shared
 import os
