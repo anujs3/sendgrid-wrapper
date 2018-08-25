@@ -20,7 +20,7 @@ def main(sender, recipient, subject, message, receivers, attachments, schedule, 
     if shared.validate_email(sender) and shared.validate_email(recipient):
         from_email = Email(sender)
         to_email = Email(recipient)
-        message_content = Content('text/plain', message)
+        message_content = Content('text/plain', message_handler(message))
         new_mail = Mail(from_email, subject, to_email, message_content)
         receiver_handler(receivers, new_mail)
         cc_handler(cc, new_mail)
@@ -31,6 +31,13 @@ def main(sender, recipient, subject, message, receivers, attachments, schedule, 
     else:
         error_handler('One or more emails are invalid.')
 
+
+def message_handler(message):
+    if shared.validate_file(message):
+        with open(message) as file:
+            return file.read()
+    else:
+        return message
 
 def receiver_handler(receivers, new_mail):
     if receivers is not None:

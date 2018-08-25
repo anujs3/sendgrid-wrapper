@@ -1,4 +1,5 @@
 .idea/
 *.pyc
+message.txt
 attachment_list.txt
 sendgrid.env
