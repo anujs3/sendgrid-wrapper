@@ -39,6 +39,7 @@ def message_handler(message):
     else:
         return message
 
+
 def receiver_handler(receivers, new_mail):
     if receivers is not None:
         list_of_emails = receivers.split(';')
