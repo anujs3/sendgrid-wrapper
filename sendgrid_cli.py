@@ -17,7 +17,7 @@ default_email = os.environ.get('DEFAULT_EMAIL')
 @click.option('--cc', help='Email Address(es) for Carbon Copies')
 @click.option('--bcc', help='Email Address(es) for Blocked Carbon Copies')
 def main(sender, recipient, subject, message, receivers, attachments, schedule, cc, bcc):
-    if shared.validate_email(sender) and shared.validate_email(recipient):
+    if shared.validate_email(str(sender)) and shared.validate_email(str(recipient)):
         from_email = Email(sender)
         to_email = Email(recipient)
         message_content = Content('text/plain', shared.message_handler(message))

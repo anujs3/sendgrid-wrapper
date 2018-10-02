@@ -12,7 +12,7 @@ DAY_IN_SECONDS = 86400
 
 
 def validate_email(email):
-    assert type(email) == str
+    assert type(email) == str, 'The email ({}) is not valid because the type is {}.'.format(email, type(email))
     return re.match('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$', email.upper()) is not None
 
 
