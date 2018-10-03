@@ -10,7 +10,11 @@ data = {
           "email": os.environ.get('DEFAULT_EMAIL')
         }
       ],
-      "subject": "Sending with SendGrid Is Fun"
+      "subject": "Sending IS Fun!",
+      "custom_args": {
+        "team": "EI",
+        "name": "Anuj Shah"
+      }
     }
   ],
   "from": {
@@ -19,10 +23,10 @@ data = {
   "content": [
     {
       "type": "text/plain",
-      "value": "This email should have a category attached to it."
+      "value": "This email should have custom arguments and a category."
     }
   ],
-  "categories": ["EI Data", "Pipeline 2020"]
+  "categories": ["EI Data"]
 }
 response = sg.client.mail.send.post(request_body=data)
 print(response.status_code)
