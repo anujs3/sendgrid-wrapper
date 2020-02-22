@@ -13,7 +13,7 @@ MAX_NUMBER_OF_CATEGORIES = 10
 
 
 def validate_email(email):
-    assert type(email) == str, 'The email ({}) is not valid because the type is {}.'.format(email, type(email))
+    assert type(email) == str or type(email) == unicode, 'The email ({}) is not valid because the type is {}.'.format(email, type(email))
     return re.match('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$', email.upper()) is not None
 
 
