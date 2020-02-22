@@ -1,4 +1,4 @@
-from sendgrid.helpers.mail import Email, Content, Mail
+from sendgrid.helpers.mail import Email, Content, Mail, Category
 import click
 import sendgrid_shared as shared
 import os
@@ -13,10 +13,11 @@ default_email = os.environ.get('DEFAULT_EMAIL')
 @click.option('--message', default='This is a test.', help='Body of the Email')
 @click.option('--receivers', help='Email Addresses of Other Recipients')
 @click.option('--attachments', help='Text File with File Paths of Attachments')
+@click.option('--categories', help='Comma Separated List of Categories')
 @click.option('--schedule', help='Date/Time to Send Email')
 @click.option('--cc', help='Email Address(es) for Carbon Copies')
 @click.option('--bcc', help='Email Address(es) for Blocked Carbon Copies')
-def main(sender, recipient, subject, message, receivers, attachments, schedule, cc, bcc):
+def main(sender, recipient, subject, message, receivers, attachments, categories, schedule, cc, bcc):
     if shared.validate_email(str(sender)) and shared.validate_email(str(recipient)):
         from_email = Email(sender)
         to_email = Email(recipient)
@@ -26,6 +27,7 @@ def main(sender, recipient, subject, message, receivers, attachments, schedule, 
         cc_handler(cc, new_mail)
         bcc_handler(bcc, new_mail)
         attachment_handler(attachments, new_mail)
+        category_handler(categories, new_mail)
         schedule_handler(schedule, new_mail)
         shared.send_mail(new_mail)
     else:
@@ -69,6 +71,13 @@ def attachment_handler(attachments, new_mail):
                 line = line.strip()
                 if shared.validate_file(line):
                     new_mail.add_attachment(shared.create_attachment(line))
+
+
+def category_handler(categories, new_mail):
+    if categories is not None:
+        list_of_categories = categories.split(',')
+        for category in list_of_categories:
+            new_mail.categories.append(Category(category))
 
 
 def schedule_handler(schedule, new_mail):

@@ -1,4 +1,4 @@
-from sendgrid.helpers.mail import Email, Content, Mail
+from sendgrid.helpers.mail import Email, Content, Mail, Category
 import re
 import sendgrid_shared as shared
 
@@ -26,6 +26,12 @@ def boolean_question(prompt_string):
 def email_creator(prompt_string):
     assert type(prompt_string) == str
     return Email(handle_user_input(field_prompt(prompt_string), shared.validate_email))
+
+
+def categories_creator():
+    categories = handle_user_input(field_prompt("Categories"))
+    list_of_categories = categories.split(',')
+    return list_of_categories
 
 
 def attachment_uploader(new_mail):
@@ -76,6 +82,14 @@ def main():
                 if attachment_boolean == 'Y':
                     attachment_uploader(new_mail)
                 elif attachment_boolean == 'N':
+                    break
+            while True:
+                categories_boolean = boolean_question('Do you want to add categories?')
+                if categories_boolean == 'Y':
+                    list_of_categories = categories_creator()
+                    for category in list_of_categories:
+                        new_mail.categories.append(Category(category))
+                elif categories_boolean == 'N':
                     break
             schedule_boolean = boolean_question('Do you want to schedule the email?')
             if schedule_boolean == 'Y':
