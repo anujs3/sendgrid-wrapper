@@ -9,6 +9,7 @@ import time
 import datetime
 
 DAY_IN_SECONDS = 86400
+MAX_NUMBER_OF_CATEGORIES = 10
 
 
 def validate_email(email):
@@ -67,5 +68,9 @@ def generate_timestamp(date):
 
 def send_mail(new_mail):
     sg = SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-    response = sg.client.mail.send.post(request_body=new_mail.get())
-    print('\n{}\n{}\n{}'.format(response.status_code, response.body, response.headers))
+    try:
+        response = sg.client.mail.send.post(request_body=new_mail.get())
+        print('\n{}\n{}\n{}'.format(response.status_code, response.body, response.headers))
+    except Exception as e:
+        print('There was an unexpected error when trying to send the email.')
+

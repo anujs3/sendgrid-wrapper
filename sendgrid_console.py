@@ -4,32 +4,33 @@ import sendgrid_shared as shared
 
 
 def field_prompt(prompt_string):
-    assert type(prompt_string) == str
+    assert type(prompt_string) == str, "The prompt must be a string."
     return prompt_string + ': '
 
 
 def boolean_formatter(prompt_string):
-    assert type(prompt_string) == str
+    assert type(prompt_string) == str, "The prompt must be a string."
     return prompt_string + ' [Y|N] '
 
 
 def validate_boolean(user_input):
-    assert type(user_input) == str
+    assert type(user_input) == str, "The input must be a string."
     return re.match('^[Y|N]$', user_input.upper()) is not None
 
 
 def boolean_question(prompt_string):
-    assert type(prompt_string) == str
+    assert type(prompt_string) == str, "The prompt must be a string."
     return handle_user_input(boolean_formatter(prompt_string), validate_boolean).upper()
 
 
 def email_creator(prompt_string):
-    assert type(prompt_string) == str
+    assert type(prompt_string) == str, "The prompt must be a string."
     return Email(handle_user_input(field_prompt(prompt_string), shared.validate_email))
 
 
 def categories_creator():
-    categories = handle_user_input(field_prompt("Categories"))
+    categories = handle_user_input(field_prompt("Categories"),
+                                   lambda input_string: len(input_string.split(',')) <= shared.MAX_NUMBER_OF_CATEGORIES)
     list_of_categories = categories.split(',')
     return list_of_categories
 
@@ -39,7 +40,7 @@ def attachment_uploader(new_mail):
     print('Attachment was successfully attached to the email.')
 
 
-def handle_user_input(prompt_string, match_condition=lambda input: input != ''):
+def handle_user_input(prompt_string, match_condition=lambda input_string: input_string != ''):
     while True:
         user_input = raw_input(prompt_string).strip()
         if match_condition(user_input):

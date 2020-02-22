@@ -76,7 +76,7 @@ def attachment_handler(attachments, new_mail):
 def category_handler(categories, new_mail):
     if categories is not None:
         list_of_categories = categories.split(',')
-        for category in list_of_categories:
+        for category in list_of_categories[:shared.MAX_NUMBER_OF_CATEGORIES]:
             new_mail.categories.append(Category(category))
 
 
